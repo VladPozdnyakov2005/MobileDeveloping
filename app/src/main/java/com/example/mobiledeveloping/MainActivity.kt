@@ -124,66 +124,30 @@ private fun getData(
 }
 
 
-private fun getWeatherByDays(response: String): List<WeatherModel>{
-    if(response.isEmpty()) return listOf()
-    val list = ArrayList<WeatherModel>()
-    val mainObject = JSONObject(response)
-    val city = mainObject.getJSONObject("location").getString("name")
-    val days = mainObject.getJSONObject("forecast").getJSONArray("forecastday")
+private fun getWeatherByHours(hours: List<HourDto>): List<WeatherModel> {
+    if (hours.isEmpty()) return listOf()
 
-    for (i in 0 until days.length()){
-        val item = days[i] as JSONObject
+    val list = ArrayList<WeatherModel>()
+
+    hours.forEach { item ->
+
         list.add(
             WeatherModel(
-                city,
-                item.getString("date"),
-                "",
-                item.getJSONObject("day").getJSONObject("condition").getString("text"),
-                item.getJSONObject("day").getJSONObject("condition").getString("icon"),
-                item.getJSONObject("day").getString("maxtemp_c"),
-                item.getJSONObject("day").getString("condition"),
-                item.getJSONArray("hour").toString()
+                city = "",
+                time = item.time,
+                currentTemp = item.tempC.toFloat().toInt().toString() + "°C",
+                condition = item.condition.text,
+                icon = item.condition.icon,
+                maxTemp = "",
+                minTemp = "",
+                hours = listOf()
             )
         )
-    }
-    list[0] = list[0].copy(
-        time = mainObject.getJSONObject("current").getString("last_updated"),
-        currentTemp = mainObject.getJSONObject("current").getString("temp_c"),
 
-        )
+    }
     return list
 }
 
-private fun getWeatherByHours(hours: List<HourDto>): List<WeatherModel> {
-
-    if(response.isEmpty()) return listOf()
-        val list = ArrayList<WeatherModel>()
-        val mainObject = JSONObject(response)
-        val city = mainObject.getJSONObject("location").getString("name")
-        val days = mainObject.getJSONObject("forecast").getJSONArray("forecastday")
-
-        for (i in 0 until days.length()){
-            val item = days[i] as JSONObject
-            list.add(
-                WeatherModel(
-                    city,
-                    item.getString("date"),
-                    "",
-                    item.getJSONObject("day").getJSONObject("condition").getString("text"),
-                    item.getJSONObject("day").getJSONObject("condition").getString("icon"),
-                    item.getJSONObject("day").getString("maxtemp_c"),
-                    item.getJSONObject("day").getString("condition"),
-                    item.getJSONArray("hour").toString()
-                )
-            )
-        }
-        list[0] = list[0].copy(
-            time = mainObject.getJSONObject("current").getString("last_updated"),
-            currentTemp = mainObject.getJSONObject("current").getString("temp_c"),
-
-            )
-        return list
-    }
 
 
 
